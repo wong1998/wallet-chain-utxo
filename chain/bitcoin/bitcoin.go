@@ -13,6 +13,7 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 
 	"github.com/dapplink-labs/wallet-chain-utxo/chain"
+	"github.com/dapplink-labs/wallet-chain-utxo/chain/base"
 	"github.com/dapplink-labs/wallet-chain-utxo/config"
 	common2 "github.com/dapplink-labs/wallet-chain-utxo/rpc/common"
 	"github.com/dapplink-labs/wallet-chain-utxo/rpc/utxo"
@@ -21,18 +22,18 @@ import (
 const ChainName = "Bitcoin"
 
 type ChainAdaptor struct {
-	btcClient       *BtcClient
-	btcDataClient   *BitcoinData
+	btcClient       *base.BaseClient
+	btcDataClient   *base.BaseDataClient
 	thirdPartClient *BcClient
 }
 
 func NewChainAdaptor(conf *config.Config) (chain.IChainAdaptor, error) {
-	btcClient, err := NewBtcClient(conf.WalletNode.Btc.RpcUrl, conf.WalletNode.Btc.RpcUser, conf.WalletNode.Btc.RpcPass)
+	baseClient, err := base.NewBaseClient(conf.WalletNode.Btc.RpcUrl, conf.WalletNode.Btc.RpcUser, conf.WalletNode.Btc.RpcPass)
 	if err != nil {
 		log.Error("new bitcoin rpc client fail", "err", err)
 		return nil, err
 	}
-	btcDataClient, err := NewBitcoinDataClient(conf.WalletNode.Btc.DataApiUrl, conf.WalletNode.Btc.DataApiKey)
+	baseDataClient, err := base.NewBaseDataClient(conf.WalletNode.Btc.DataApiUrl, conf.WalletNode.Btc.DataApiKey, "BTC", "Bitcoin")
 	if err != nil {
 		log.Error("new bitcoin data client fail", "err", err)
 		return nil, err
@@ -43,8 +44,8 @@ func NewChainAdaptor(conf *config.Config) (chain.IChainAdaptor, error) {
 		return nil, err
 	}
 	return &ChainAdaptor{
-		btcClient:       btcClient,
-		btcDataClient:   btcDataClient,
+		btcClient:       baseClient,
+		btcDataClient:   baseDataClient,
 		thirdPartClient: bcClient,
 	}, nil
 }
@@ -135,11 +136,11 @@ func (c *ChainAdaptor) GetUnspentOutputs(req *utxo.UnspentOutputsRequest) (*utxo
 	for _, value := range utxoList {
 		unspentOutput := &utxo.UnspentOutput{
 			TxHashBigEndian: value.TxHashBigEndian,
-			TxHash:          value.TxHash,
+			TxId:            value.TxHash,
 			TxOutputN:       value.TxOutputN,
 			Script:          value.Script,
-			Value:           value.Value,
-			TxIndex:         value.TxIndex,
+			UnspentAmount:   strconv.FormatUint(value.Value, 10),
+			Index:           value.TxIndex,
 		}
 		unspentOutputList = append(unspentOutputList, unspentOutput)
 	}
