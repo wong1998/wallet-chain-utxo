@@ -5,6 +5,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/log"
 
+	"github.com/dapplink-labs/chain-explorer-api/common/gas_fee"
 	"github.com/dapplink-labs/chain-explorer-api/explorer/oklink"
 )
 
@@ -21,14 +22,14 @@ func NewBitcoinDataClient(baseUrl, apiKey string) (*BitcoinData, error) {
 	return &BitcoinData{BitcoinDataCli: btcCli}, err
 }
 
-func (bd *BitcoinData) GetFee() error {
-	return nil
-}
-
-func (bd *BitcoinData) GetTxUtxoList() error {
-	return nil
-}
-
-func (bd *BitcoinData) GetTxByAddress() error {
-	return nil
+func (bd *BitcoinData) GetFee() (*gas_fee.GasEstimateFeeResponse, error) {
+	gefr := &gas_fee.GasEstimateFeeRequest{
+		ChainShortName: "BTC",
+		ExplorerName:   "Bitcoin",
+	}
+	okResp, err := bd.BitcoinDataCli.GetEstimateGasFee(gefr)
+	if err != nil {
+		return nil, err
+	}
+	return okResp, nil
 }

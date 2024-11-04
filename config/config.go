@@ -25,6 +25,7 @@ type Node struct {
 	DataApiUrl   string `yaml:"data_api_url"`
 	DataApiKey   string `yaml:"data_api_key"`
 	DataApiToken string `yaml:"data_api_token"`
+	TpApiUrl     string `yaml:"tp_api_url"`
 	TimeOut      uint64 `yaml:"time_out"`
 }
 
