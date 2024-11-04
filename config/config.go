@@ -30,8 +30,11 @@ type Node struct {
 }
 
 type WalletNode struct {
-	Btc Node `yaml:"btc"`
-	Ltc Node `yaml:"ltc"`
+	Btc  Node `yaml:"btc"`
+	Bch  Node `yaml:"bch"`
+	Dash Node `yaml:"dash"`
+	Doge Node `yaml:"doge"`
+	Ltc  Node `yaml:"ltc"`
 }
 
 type Config struct {

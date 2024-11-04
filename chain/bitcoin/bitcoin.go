@@ -96,11 +96,13 @@ func (c *ChainAdaptor) GetFee(req *utxo.FeeRequest) (*utxo.FeeResponse, error) {
 		}, err
 	}
 	return &utxo.FeeResponse{
-		Code:      common2.ReturnCode_SUCCESS,
-		Msg:       "get fee success",
-		SlowFee:   gasFeeResp.BaseFee,
-		NormalFee: gasFeeResp.RecommendedGasPrice,
-		FastFee:   gasFeeResp.BestTransactionFee,
+		Code:       common2.ReturnCode_SUCCESS,
+		Msg:        "get fee success",
+		BestFee:    gasFeeResp.BestTransactionFee,
+		BestFeeSat: gasFeeResp.BestTransactionFeeSat,
+		SlowFee:    gasFeeResp.SlowGasPrice,
+		NormalFee:  gasFeeResp.StandardGasPrice,
+		FastFee:    gasFeeResp.RapidGasPrice,
 	}, nil
 }
 
