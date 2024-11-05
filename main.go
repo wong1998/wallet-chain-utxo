@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"github.com/dapplink-labs/wallet-chain-utxo/rpc/utxo"
 	"net"
 
 	"google.golang.org/grpc"
@@ -12,6 +11,7 @@ import (
 
 	"github.com/dapplink-labs/wallet-chain-utxo/chaindispatcher"
 	"github.com/dapplink-labs/wallet-chain-utxo/config"
+	"github.com/dapplink-labs/wallet-chain-utxo/rpc/utxo"
 )
 
 func main() {

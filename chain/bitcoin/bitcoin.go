@@ -2,15 +2,22 @@ package bitcoin
 
 import (
 	"bytes"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
 
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcd/wire"
-
 	"github.com/ethereum/go-ethereum/log"
+	"github.com/pkg/errors"
+
+	"github.com/btcsuite/btcd/btcec/v2"
+	"github.com/btcsuite/btcd/btcec/v2/schnorr"
+	"github.com/btcsuite/btcd/btcutil"
+	"github.com/btcsuite/btcd/chaincfg"
+	"github.com/btcsuite/btcd/chaincfg/chainhash"
+	"github.com/btcsuite/btcd/txscript"
+	"github.com/btcsuite/btcd/wire"
 
 	"github.com/dapplink-labs/wallet-chain-utxo/chain"
 	"github.com/dapplink-labs/wallet-chain-utxo/chain/base"
@@ -59,33 +66,81 @@ func (c *ChainAdaptor) GetSupportChains(req *utxo.SupportChainsRequest) (*utxo.S
 }
 
 func (c *ChainAdaptor) ConvertAddress(req *utxo.ConvertAddressRequest) (*utxo.ConvertAddressResponse, error) {
+	var address string
+	compressedPubKeyBytes, _ := hex.DecodeString(req.PublicKey)
+	pubKeyHash := btcutil.Hash160(compressedPubKeyBytes)
 	switch req.Format {
 	case "p2pkh":
-		return nil, nil
+		p2pkhAddr, err := btcutil.NewAddressPubKeyHash(pubKeyHash, &chaincfg.MainNetParams)
+		if err != nil {
+			log.Error("create p2pkh address fail", "err", err)
+			return nil, err
+		}
+		address = p2pkhAddr.EncodeAddress()
+		break
 	case "p2wpkh":
-		return nil, nil
+		witnessAddr, err := btcutil.NewAddressWitnessPubKeyHash(pubKeyHash, &chaincfg.MainNetParams)
+		if err != nil {
+			log.Error("create p2wpkh fail", "err", err)
+		}
+		address = witnessAddr.EncodeAddress()
+		break
 	case "p2sh":
-		return nil, nil
+		witnessAddr, _ := btcutil.NewAddressWitnessPubKeyHash(pubKeyHash, &chaincfg.MainNetParams)
+		script, err := txscript.PayToAddrScript(witnessAddr)
+		if err != nil {
+			log.Error("create p2sh address script fail", "err", err)
+			return nil, err
+		}
+		p2shAddr, err := btcutil.NewAddressScriptHash(script, &chaincfg.MainNetParams)
+		if err != nil {
+			log.Error("create p2sh address fail", "err", err)
+			return nil, err
+		}
+		address = p2shAddr.EncodeAddress()
+		break
 	case "p2tr":
-		return nil, nil
+		pubKey, err := btcec.ParsePubKey(compressedPubKeyBytes)
+		if err != nil {
+			log.Error("parse public key fail", "err", err)
+			return nil, err
+		}
+		taprootPubKey := schnorr.SerializePubKey(pubKey)
+		taprootAddr, err := btcutil.NewAddressTaproot(taprootPubKey, &chaincfg.MainNetParams)
+		if err != nil {
+			log.Error("create taproot address fail", "err", err)
+			return nil, err
+		}
+		address = taprootAddr.EncodeAddress()
 	default:
-		return nil, nil
+		return nil, errors.New("Do not support address type")
 	}
+	return &utxo.ConvertAddressResponse{
+		Code:    common2.ReturnCode_SUCCESS,
+		Msg:     "create address success",
+		Address: address,
+	}, nil
 }
 
 func (c *ChainAdaptor) ValidAddress(req *utxo.ValidAddressRequest) (*utxo.ValidAddressResponse, error) {
-	switch req.Format {
-	case "p2pkh":
-		return nil, nil
-	case "p2wpkh":
-		return nil, nil
-	case "p2sh":
-		return nil, nil
-	case "p2tr":
-		return nil, nil
-	default:
-		return nil, nil
+	address, err := btcutil.DecodeAddress(req.Address, &chaincfg.MainNetParams)
+	if err != nil {
+		return &utxo.ValidAddressResponse{
+			Code: common2.ReturnCode_ERROR,
+			Msg:  err.Error(),
+		}, nil
 	}
+	if !address.IsForNet(&chaincfg.MainNetParams) {
+		return &utxo.ValidAddressResponse{
+			Code: common2.ReturnCode_ERROR,
+			Msg:  "address is not valid for this network",
+		}, nil
+	}
+	return &utxo.ValidAddressResponse{
+		Code:  common2.ReturnCode_SUCCESS,
+		Msg:   "verify address success",
+		Valid: true,
+	}, nil
 }
 
 func (c *ChainAdaptor) GetFee(req *utxo.FeeRequest) (*utxo.FeeResponse, error) {
