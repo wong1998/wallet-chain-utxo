@@ -8,14 +8,14 @@ parent:
 </div>
 
 <div align="center">
-  <a href="https://github.com/dapplink-labs/wallet-chain-account/releases/latest">
-    <img alt="Version" src="https://img.shields.io/github/tag/dapplink-labs/wallet-chain-account.svg" />
+  <a href="https://github.com/dapplink-labs/wallet-chain-utxo/releases/latest">
+    <img alt="Version" src="https://img.shields.io/github/tag/dapplink-labs/wallet-chain-utxo.svg" />
   </a>
-  <a href="https://github.com/dapplink-labs/wallet-chain-account/blob/main/LICENSE">
-    <img alt="License: Apache-2.0" src="https://img.shields.io/github/license/dapplink-labs/wallet-chain-account.svg" />
+  <a href="https://github.com/dapplink-labs/wallet-chain-utxo/blob/main/LICENSE">
+    <img alt="License: Apache-2.0" src="https://img.shields.io/github/license/dapplink-labs/wallet-chain-utxo.svg" />
   </a>
-  <a href="https://pkg.go.dev/github.com/dapplink-labs/wallet-chain-account">
-    <img alt="GoDoc" src="https://godoc.org/github.com/dapplink-labs/wallet-chain-account?status.svg" />
+  <a href="https://pkg.go.dev/github.com/dapplink-labs/wallet-chain-utxo">
+    <img alt="GoDoc" src="https://godoc.org/github.com/dapplink-labs/wallet-chain-utxo?status.svg" />
   </a>
 </div>
 
