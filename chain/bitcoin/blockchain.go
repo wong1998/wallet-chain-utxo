@@ -2,11 +2,10 @@ package bitcoin
 
 import (
 	"fmt"
+	"github.com/dapplink-labs/wallet-chain-utxo/chain/bitcoin/types"
 
 	gresty "github.com/go-resty/resty/v2"
 	"github.com/pkg/errors"
-
-	"github.com/dapplink-labs/wallet-chain-utxo/chain/bitcoin/types"
 )
 
 var errBlockChainHTTPError = errors.New("blockchain http error")

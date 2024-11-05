@@ -102,7 +102,7 @@ grpcurl -plaintext -d '{
 ```
 grpcurl -plaintext -d '{
   "chain": "Bitcoin",
-  "coin": "BTCC",
+  "coin": "BTC",
   "network": "mainnet",
   "hash": "6120d6603f3fb0811018afb5ee397971b69bbb927f05f5cc36249ac6aeff578b"
 }' 127.0.0.1:8289 dapplink.utxo.WalletUtxoService.getTxByHash

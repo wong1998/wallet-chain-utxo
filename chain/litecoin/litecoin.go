@@ -3,7 +3,6 @@ package litecoin
 import (
 	"bytes"
 	"encoding/hex"
-	"github.com/btcsuite/btcd/chaincfg"
 	"strconv"
 	"strings"
 
@@ -11,6 +10,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/btcsuite/btcd/btcutil"
+	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/btcd/txscript"
 	"github.com/btcsuite/btcd/wire"
 
