@@ -93,6 +93,7 @@ func (bdc *BaseDataClient) GetTxListByAddress(address string, page, pageSize uin
 		log.Error("get tx by address fail", "err", err)
 		return nil, err
 	}
+	log.Info("tx list response success", "transactionList Length", len(txListResponse.TransactionList))
 	return txListResponse, nil
 }
 
