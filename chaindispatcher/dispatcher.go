@@ -64,6 +64,7 @@ func New(conf *config.Config) (*ChainDispatcher, error) {
 	return &dispatcher, nil
 }
 
+// 结构体方法
 func (d *ChainDispatcher) Interceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 	defer func() {
 		if e := recover(); e != nil {
@@ -74,6 +75,7 @@ func (d *ChainDispatcher) Interceptor(ctx context.Context, req interface{}, info
 	}()
 
 	pos := strings.LastIndex(info.FullMethod, "/")
+	//获取方法的名称
 	method := info.FullMethod[pos+1:]
 
 	chainName := req.(CommonRequest).GetChain()

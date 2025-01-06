@@ -70,6 +70,7 @@ func (c *ChainAdaptor) GetSupportChains(req *utxo.SupportChainsRequest) (*utxo.S
 
 func (c *ChainAdaptor) ConvertAddress(req *utxo.ConvertAddressRequest) (*utxo.ConvertAddressResponse, error) {
 	var address string
+	//将16进制的转化为bytes[]
 	compressedPubKeyBytes, _ := hex.DecodeString(req.PublicKey)
 	pubKeyHash := btcutil.Hash160(compressedPubKeyBytes)
 	switch req.Format {
