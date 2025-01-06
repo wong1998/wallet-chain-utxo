@@ -37,6 +37,7 @@ func New(conf *config.Config) (*ChainDispatcher, error) {
 	dispatcher := ChainDispatcher{
 		registry: make(map[ChainType]chain.IChainAdaptor),
 	}
+	//惰性初始化 和 动态创建
 	chainAdaptorFactoryMap := map[string]func(conf *config.Config) (chain.IChainAdaptor, error){
 		bitcoin.ChainName:     bitcoin.NewChainAdaptor,
 		bitcoincash.ChainName: bitcoincash.NewChainAdaptor,

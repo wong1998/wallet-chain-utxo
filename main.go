@@ -15,6 +15,7 @@ import (
 )
 
 func main() {
+	//-c config.yml默认值
 	var f = flag.String("c", "config.yml", "config path")
 	flag.Parse()
 	conf, err := config.New(*f)

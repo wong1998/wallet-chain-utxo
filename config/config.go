@@ -53,6 +53,7 @@ const (
 )
 
 func New(path string) (*Config, error) {
+	//将yaml文件中的配置信息解析成config结构体的内容，并且将结构体指针返回到外部
 	var config = new(Config)
 	h := log.NewTerminalHandler(os.Stdout, true)
 	log.SetDefault(log.NewLogger(h))
